@@ -1,80 +1,218 @@
 ---
-title: "Quickstart"
-description: "Start building awesome documentation in minutes"
+title: Quickstart
+description: Get started with webpack and create your first bundle
 ---
 
-## Get started in three steps
+# Quickstart
 
-Get your documentation site running locally and make your first customization.
+Get started with webpack by creating a simple project and bundling it.
 
-### Step 1: Set up your local environment
-
-<AccordionGroup>
-  <Accordion icon="copy" title="Clone your docs locally">
-    During the onboarding process, you created a GitHub repository with your docs content if you didn't already have one. You can find a link to this repository in your [dashboard](https://dashboard.mintlify.com).
+<Steps>
+  <Step title="Create a project directory">
+    Create a new directory for your project and initialize npm:
     
-    To clone the repository locally so that you can make and preview changes to your docs, follow the [Cloning a repository](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository) guide in the GitHub docs.
-  </Accordion>
-  <Accordion icon="rectangle-terminal" title="Start the preview server">
-    1. Install the Mintlify CLI: `npm i -g mint`
-    2. Navigate to your docs directory and run: `mint dev`
-    3. Open `http://localhost:3000` to see your docs live!
+    ```bash
+    mkdir webpack-demo
+    cd webpack-demo
+    npm init -y
+    ```
+  </Step>
+
+  <Step title="Install webpack">
+    Install webpack and webpack-cli as dev dependencies:
     
-    <Tip>Your preview updates automatically as you edit files.</Tip>
-  </Accordion>
-</AccordionGroup>
-
-### Step 2: Deploy your changes
-
-<AccordionGroup>
-  <Accordion icon="github" title="Install our GitHub app">
-    Install the Mintlify GitHub app from your [dashboard](https://dashboard.mintlify.com/settings/organization/github-app).
+    <CodeGroup>
+    ```bash npm
+    npm install --save-dev webpack webpack-cli
+    ```
     
-    Our GitHub app automatically deploys your changes to your docs site, so you don't need to manage deployments yourself.
-</Accordion>
-<Accordion icon="palette" title="Update your site name and colors">
-    For a first change, let's update the name and colors of your docs site.
+    ```bash yarn
+    yarn add --dev webpack webpack-cli
+    ```
+    
+    ```bash pnpm
+    pnpm add -D webpack webpack-cli
+    ```
+    </CodeGroup>
+  </Step>
 
-    1. Open `docs.json` in your editor.
-    2. Change the `"name"` field to your project name.
-    3. Update the `"colors"` to match your brand.
-    4. Save and see your changes instantly at `http://localhost:3000`.
+  <Step title="Create source files">
+    Create a `src` directory and add your JavaScript files:
+    
+    **src/index.js**
+    ```javascript
+    import { add } from './math.js';
+    
+    console.log('webpack is working!');
+    console.log('2 + 3 =', add(2, 3));
+    ```
+    
+    **src/math.js**
+    ```javascript
+    export function add(a, b) {
+      return a + b;
+    }
+    
+    export function subtract(a, b) {
+      return a - b;
+    }
+    ```
+  </Step>
 
-    <Tip>Try changing the primary color to see an immediate difference!</Tip>
-  </Accordion>
-</AccordionGroup>
+  <Step title="Create webpack configuration">
+    Create a `webpack.config.js` file in the root directory:
+    
+    ```javascript
+    const path = require('path');
+    
+    module.exports = {
+      mode: 'development',
+      entry: './src/index.js',
+      output: {
+        filename: 'bundle.js',
+        path: path.resolve(__dirname, 'dist'),
+      },
+    };
+    ```
+  </Step>
 
-### Step 3: Go live
+  <Step title="Add build script">
+    Update your `package.json` to include a build script:
+    
+    ```json
+    {
+      "scripts": {
+        "build": "webpack"
+      }
+    }
+    ```
+  </Step>
 
-<Accordion icon="rocket" title="Publish your docs">
-  1. Commit and push your changes.
-  2. Your docs will update and be live in moments!
-</Accordion>
+  <Step title="Build your bundle">
+    Run webpack to create your bundle:
+    
+    ```bash
+    npm run build
+    ```
+    
+    Webpack will create a `dist/bundle.js` file with your bundled code.
+  </Step>
 
-## Next steps
+  <Step title="Create an HTML file">
+    Create `dist/index.html` to load your bundle:
+    
+    ```html
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <meta charset="utf-8">
+        <title>webpack Demo</title>
+      </head>
+      <body>
+        <h1>webpack Quickstart</h1>
+        <script src="bundle.js"></script>
+      </body>
+    </html>
+    ```
+    
+    Open `dist/index.html` in your browser and check the console!
+  </Step>
+</Steps>
 
-Now that you have your docs running, explore these key features:
+## What Just Happened?
 
-<CardGroup cols={2}>
+Webpack:
+1. Started from the entry point (`src/index.js`)
+2. Analyzed all imports and created a dependency graph
+3. Bundled all modules into a single file (`dist/bundle.js`)
+4. Generated optimized JavaScript that runs in the browser
 
-<Card title="Write Content" icon="pen-to-square" href="/essentials/markdown">
-  Learn MDX syntax and start writing your documentation.
-</Card>
+## Production Build
 
-<Card title="Customize style" icon="palette" href="/essentials/settings">
-  Make your docs match your brand perfectly.
-</Card>
+For production, change the mode to `production`:
 
-<Card title="Add code examples" icon="square-code" href="/essentials/code">
-  Include syntax-highlighted code blocks.
-</Card>
+```javascript
+module.exports = {
+  mode: 'production',
+  entry: './src/index.js',
+  output: {
+    filename: 'bundle.js',
+    path: path.resolve(__dirname, 'dist'),
+  },
+};
+```
 
-<Card title="API documentation" icon="code" href="/api-reference/introduction">
-  Auto-generate API docs from OpenAPI specs.
-</Card>
+Production mode automatically:
+- Minifies your code
+- Enables tree shaking
+- Optimizes bundle size
+- Sets `process.env.NODE_ENV` to `production`
 
-</CardGroup>
+## Adding CSS
+
+To bundle CSS files, install loaders:
+
+```bash
+npm install --save-dev style-loader css-loader
+```
+
+Update `webpack.config.js`:
+
+```javascript
+module.exports = {
+  mode: 'development',
+  entry: './src/index.js',
+  output: {
+    filename: 'bundle.js',
+    path: path.resolve(__dirname, 'dist'),
+  },
+  module: {
+    rules: [
+      {
+        test: /\.css$/i,
+        use: ['style-loader', 'css-loader'],
+      },
+    ],
+  },
+};
+```
+
+Create `src/style.css`:
+
+```css
+body {
+  background-color: #f0f0f0;
+  font-family: Arial, sans-serif;
+}
+```
+
+Import it in `src/index.js`:
+
+```javascript
+import './style.css';
+import { add } from './math.js';
+
+console.log('webpack is working!');
+console.log('2 + 3 =', add(2, 3));
+```
 
 <Note>
-  **Need help?** See our [full documentation](https://mintlify.com/docs) or join our [community](https://mintlify.com/community).
+  Loaders transform files before they're added to the bundle. CSS files are converted to JavaScript that injects styles into the page.
 </Note>
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Core Concepts" icon="book" href="/concepts/entry">
+    Learn about entry points, output, loaders, and plugins
+  </Card>
+  <Card title="Configuration" icon="gear" href="/configuration/overview">
+    Explore all configuration options
+  </Card>
+  <Card title="Code Splitting" icon="scissors" href="/guides/code-splitting">
+    Split your code for better performance
+  </Card>
+  <Card title="Development" icon="laptop-code" href="/guides/development">
+    Set up a development environment with dev server and HMR
+  </Card>
+</CardGroup>
