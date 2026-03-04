@@ -146,6 +146,8 @@
               "plugins/module-federation-plugin",
               "plugins/provide-plugin",
               "plugins/banner-plugin",
+              "plugins/clean-plugin",
+              "plugins/dotenv-plugin",
               "plugins/ignore-plugin",
               "plugins/environment-plugin",
               "plugins/normal-module-replacement-plugin",
